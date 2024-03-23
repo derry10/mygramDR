@@ -1,2 +1,2 @@
 # mygramDR
-final project golang
+final project golang Dede Rian
