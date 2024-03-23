@@ -4,35 +4,40 @@ import (
 	"fmt"
 	"log"
 	"mygram/models"
+	"os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var (
-	host     = "localhost"
-	port     = 3306 // Port MySQL default adalah 3306
-	user     = "root"
-	password = ""          // Ganti dengan kata sandi MySQL
-	dbname   = "mygram_db" // Ganti dengan nama database
-	db       *gorm.DB
-	err      error
+	host     = os.Getenv("DB_HOST")
+	port     = os.Getenv("DB_PORT")
+	user     = os.Getenv("DB_USER")
+	password = os.Getenv("DB_PASSWORD")
+	dbname   = os.Getenv("DB_DATABASE")
+
+	db  *gorm.DB
+	err error
 )
 
 func StartDB() {
-	// Konfigurasi koneksi MySQL
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	// Database connection configuration for MySQL
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		user, password, host, port, dbname)
 
-	// Buka koneksi ke MySQL
+	// Open a connection to MySQL
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		log.Fatal("Failed to connect database: ", err)
+		log.Fatal("Failed to connect to the database: ", err)
 	}
 
-	// Auto migrate tabel-tabel model
-	db.Debug().AutoMigrate(&models.User{}, &models.Comment{}, &models.Photo{}, &models.SocialMedia{})
+	// Auto migrate model tables
+	err = db.AutoMigrate(&models.User{}, &models.Comment{}, &models.Photo{}, &models.SocialMedia{})
+	if err != nil {
+		log.Fatal("Failed to auto migrate tables: ", err)
+	}
 }
 
 func GetDB() *gorm.DB {
