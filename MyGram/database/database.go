@@ -1,38 +1,30 @@
+package database
+
 import (
-	"fmt"
-	"log"
-	"os"
-	"mygram/models"
-
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+    "gorm.io/driver/mysql"
+    "gorm.io/gorm"
+    "mygram/models"
+    "log"
+    "os"
 )
 
-var (
-	host     = os.Getenv("MYSQL_HOST")
-	port     = os.Getenv("MYSQL_PORT")
-	user     = os.Getenv("MYSQL_USER")
-	password = os.Getenv("MYSQL_PASSWORD")
-	dbname   = os.Getenv("MYSQL_DATABASE")
-
-	db  *gorm.DB
-	err error
-)
+var db *gorm.DB
 
 func StartDB() {
-	config := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		user, password, host, port, dbname)
+    // Read DATABASE_URL from environment variable
+    dbURL := os.Getenv("DATABASE_URL")
 
-	db, err = gorm.Open(mysql.Open(config), &gorm.Config{})
-	if err != nil {
-		log.Fatal("error connection to database:", err)
-	}
+    // Open database connection
+    var err error
+    db, err = gorm.Open(mysql.Open(dbURL), &gorm.Config{})
+    if err != nil {
+        log.Fatal("Error connecting to the database:", err)
+    }
 
-	fmt.Println("Successfully connected to the database")
-
-	db.Debug().AutoMigrate(&models.User{}, &models.Comment{}, &models.Photo{}, &models.SocialMedia{})
+    log.Println("Connected to the database")
+    db.AutoMigrate(&models.User{}, &models.Photo{}, &models.Comment{}, &models.SocialMedia{})
 }
 
 func GetDB() *gorm.DB {
-	return db
+    return db
 }
