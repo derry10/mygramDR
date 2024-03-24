@@ -14,8 +14,8 @@ func StartDB() *gin.Engine {
 	{
 		userGroup.POST("/register", controllers.UserRegister)
 		userGroup.POST("/login", controllers.UserLogin)
-		userGroup.PUT("/edit/:id", middlewares.Authentication(), controllers.UserUpdate)
-		userGroup.DELETE("/delete/:id", middlewares.Authentication(), controllers.UserDelete)
+		userGroup.PUT("/edit/:userId", middlewares.Authentication(), controllers.UserUpdate)
+		userGroup.DELETE("/delete/:userId", middlewares.Authentication(), controllers.UserDelete)
 	}
 
 	photoGroup := r.Group("/photos")
