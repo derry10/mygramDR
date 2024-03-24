@@ -14,7 +14,7 @@ func StartDB() *gin.Engine {
 	{
 		userGroup.POST("/register", controllers.UserRegister)
 		userGroup.POST("/login", controllers.UserLogin)
-		userGroup.PUT("/update/:userId", middlewares.Authentication(), controllers.UserUpdate)
+		userGroup.PUT("/:userId", middlewares.Authentication(), controllers.UserUpdate)
 		userGroup.DELETE("/delete", middlewares.Authentication(), controllers.UserDelete)
 	}
 
