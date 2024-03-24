@@ -14,35 +14,35 @@ func StartDB() *gin.Engine {
 	{
 		userGroup.POST("/register", controllers.UserRegister)
 		userGroup.POST("/login", controllers.UserLogin)
-		userGroup.PUT("/edit/:userId", middlewares.Authentication(), controllers.UserUpdate)
-		userGroup.DELETE("/delete/:userId", middlewares.Authentication(), controllers.UserDelete)
+		userGroup.PUT("/update/:userId", middlewares.Authentication(), controllers.UserUpdate)
+		userGroup.DELETE("/delete", middlewares.Authentication(), controllers.UserDelete)
 	}
 
 	photoGroup := r.Group("/photos")
 	{
 		photoGroup.Use(middlewares.Authentication())
-		photoGroup.POST("/post", controllers.CreatePhoto)
-		photoGroup.GET("/get", controllers.GetPhoto)
-		photoGroup.PUT("/edit/:photoId", middlewares.PhotoAuthorization(), controllers.UpdatePhoto)
-		photoGroup.DELETE("/delete/:photoId", middlewares.PhotoAuthorization(), controllers.DeletePhoto)
+		photoGroup.POST("/", controllers.CreatePhoto)
+		photoGroup.GET("/", controllers.GetPhoto)
+		photoGroup.PUT("/:photoId", middlewares.PhotoAuthorization(), controllers.UpdatePhoto)
+		photoGroup.DELETE("/:photoId", middlewares.PhotoAuthorization(), controllers.DeletePhoto)
 	}
 
 	commentGroup := r.Group("/comments")
 	{
 		commentGroup.Use(middlewares.Authentication())
-		commentGroup.POST("/post", controllers.CreateComment)
-		commentGroup.GET("/get", controllers.GetComment)
-		commentGroup.PUT("/edit/:commentId", middlewares.CommentAuthorization(), controllers.UpdateComment)
-		commentGroup.DELETE("/delete/:commentId", middlewares.CommentAuthorization(), controllers.DeleteComment)
+		commentGroup.POST("/", controllers.CreateComment)
+		commentGroup.GET("/", controllers.GetComment)
+		commentGroup.PUT("/:commentId", middlewares.CommentAuthorization(), controllers.UpdateComment)
+		commentGroup.DELETE("/:commentId", middlewares.CommentAuthorization(), controllers.DeleteComment)
 	}
 
 	socialmediasGroup := r.Group("/socialmedias")
 	{
 		socialmediasGroup.Use(middlewares.Authentication())
-		socialmediasGroup.POST("/post", controllers.CreateSocialMedia)
-		socialmediasGroup.GET("/get", controllers.GetSocialMedia)
-		socialmediasGroup.PUT("/edit/:socialMediaId", middlewares.SocialMediaAuthorization(), controllers.UpdateSocialMedia)
-		socialmediasGroup.DELETE("/delete/:socialMediaId", middlewares.SocialMediaAuthorization(), controllers.DeleteSocialMedia)
+		socialmediasGroup.POST("/", controllers.CreateSocialMedia)
+		socialmediasGroup.GET("/", controllers.GetSocialMedia)
+		socialmediasGroup.PUT("/:socialMediaId", middlewares.SocialMediaAuthorization(), controllers.UpdateSocialMedia)
+		socialmediasGroup.DELETE("/:socialMediaId", middlewares.SocialMediaAuthorization(), controllers.DeleteSocialMedia)
 	}
 
 	return r
